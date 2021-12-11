@@ -112,15 +112,17 @@ router.post('/addItem', async (req, res) => {
     //   });
 
       doc(db, "list", docId), {
-        UId: user_ID,
-        item_name: req.get('item_name'),
-        courier: req.get('courier'),
-        invoice_num: req.get('invoice_num'),
-        last_update: new Date()
-      });
+        UId: user_ID, //string
+        item_name: req.get('item_name'), //string
+        courier: req.get('courier'), //string
+        invoice_num: req.get('invoice_num'), //string
+        last_update: new Date() //timestamp type
+      }
+    );
+    //TODO: item 추가 했으니, 다시 메인페이지로 가야함.
     res.json({ success: true });
   } catch (error) {
-      //TODO: 다시 로그인 창으로 가야함.
+      //TODO: 다시 추가할 item 정보 입력 창으로 가야함
       //   res.render(viewPath + 'login.html');
       res.status(406).json({ 
         success: false, 
