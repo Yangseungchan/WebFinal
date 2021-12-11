@@ -5,6 +5,24 @@ import api from './routes/api/customers.js';
 import index from './routes/index/index.js';
 import ejs from 'ejs';
 
+// import {example} from './routes/firebase/login.js';
+
+
+//firebase admin init part
+// var admin = require("firebase-admin");
+
+// var serviceAccount = require("/Users/jin/WEBproject/WebFinal/private/delivery-inquiry-firebase-adminsdk-uviu9-9b9554879f.json");
+
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount)
+// });
+
+
+
+
+
+
+
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -17,6 +35,7 @@ const viewPath = path.resolve() + '/views/';
 
 app.use('/api', api); // api routing
 app.use('/', index); // rest routing
+
 
 app.listen(8001, function () {
   console.log('Example app listening on port 8001!');
