@@ -1,0 +1,25 @@
+.index-body {
+  position: relative;
+}
+
+.modal-btn {
+  position: absolute;
+  bottom: 3rem;
+  right: 20rem;
+  font-size: 3.5rem;
+  color: white;
+  width: 6rem;
+  height: 6rem;
+  border-radius: 50%;
+  text-align: center;
+  background-color: var(--primary-color);
+  border: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-btn:hover {
+  background-color: var(--secondary-color);
+  text-decoration: none;
+}
