@@ -18,4 +18,4 @@ router.get('/customers/all', function (req, res) {
   return res.send(customers);
 });
 
-module.exports = router;
+export default router;
