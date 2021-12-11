@@ -1,9 +1,8 @@
 import { Router } from 'express';
 import path from 'path';
 import { firebaseConfig } from '../firebase/config.js';
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { initializeApp } from 'firebase/app';
-import { signup, login } from '../firebase/service.js';
 import {
   getAuth,
   createUserWithEmailAndPassword,

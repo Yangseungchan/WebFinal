@@ -1,20 +1,21 @@
 import { Router } from 'express';
 import path from 'path';
 import { firebaseConfig } from '../firebase/config.js';
-import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
-import { initializeApp } from 'firebase/app';
-import { signup, login } from '../firebase/service.js';
+import db from '../firebase/database.js';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
+// import { initializeApp } from 'firebase/app';
 import {
   getAuth,
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
 
+
 const router = Router();
 const viewPath = path.resolve() + '/views/';
 
-const app = initializeApp(firebaseConfig);
-let database = getFirestore(app);
+// const app = initializeApp(firebaseConfig);
+// let database = getFirestore(app);
 const auth = getAuth();
 
 router.get('/login', (req, res) => {
@@ -31,6 +32,8 @@ router.get('/login', (req, res) => {
       //TODO: 로그인
       //   res.render(viewPath + 'signup.html');
       // ...
+      // userCredential.user.reloadUserInfo.localId,
+      res.cookie('UId', userCredential.user.reloadUserInfo.localId);
       res.json({ success: true });
     })
     .catch(error => {
@@ -42,5 +45,7 @@ router.get('/login', (req, res) => {
       res.status(406).json({ success: false });
     });
 });
-router.get();
+router.get('init', (req, res) =>{
+
+});
 export default router;
