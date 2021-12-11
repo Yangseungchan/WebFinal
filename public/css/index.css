@@ -1,2 +1,16 @@
+@import url('./reset.css');
+
+:root {
+  --primary-color: #74b9ff;
+  --secondary-color: #0984e3;
+  --red-color: #e17055;
+  --purple-color: #6c5ce7;
+}
+
 * {
+  font-family: 'Gothic A1', -apple-system, sans-serif;
+}
+
+.title-font {
+  font-family: 'Lobster', cursive;
 }
