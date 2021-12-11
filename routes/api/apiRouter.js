@@ -52,11 +52,15 @@ router.get('/init', async (req, res) =>{
   //response에 담을 (json 객체를 담는) 리스트
   var item_list = [];
 
+  // parse the UId from the req header Cookie
+  var user_ID = req.headers.cookie;
+  user_ID = user_ID.slice(4, user_ID.length - 1);
+
   //get the instance for specific collection in DB
   const list_collection = collection(db, "list");
 
-  //search for all the document base on the contidition specified in "where( )"
-  const q = query(list_collection, where("UId", "==", "pBUI0fRoSWc6dcrmaLH8EhN5Sf73"));
+  //search for all the documents which are matching with USER ID
+  const q = query(list_collection, where("UId", "==", user_ID));
   const querySnapshot = await getDocs(q);
 
   //parse the all documents to make response JSON object list
@@ -64,7 +68,7 @@ router.get('/init', async (req, res) =>{
     var item_data = doc.data()
     var item = {
       item_id: item_data.item_id,
-      UId: item_data.UId,
+      UId: user_ID,
       courier: item_data.courier,
       invoice_num: item_data.invoice_num,
       item_name: item_data.item_name,
@@ -72,10 +76,10 @@ router.get('/init', async (req, res) =>{
     };
     item_list.push(item);
     console.log(item);
-    // console.log(doc);
+    // console.log(req.headers.cookie);
     // doc.data() is never undefined for query doc snapshots
     // doc.id = document's name
-    console.log(doc.id, " => ", item_data.item_id);
+    // console.log(doc.id, " => ", item_data.item_id);
   });
 
   //return the JSON as response
