@@ -42,5 +42,5 @@ router.get('/login', (req, res) => {
       res.status(406).json({ success: false });
     });
 });
-
+router.get();
 export default router;
