@@ -86,16 +86,46 @@ router.get('/init', async (req, res) =>{
   res.contentType('application/json');
   res.send(JSON.stringify(item_list));
 
-  //TODO:
-  // // Add a new document in collection "list"
-  // await setDoc(
-    //TODO: doc()의 3번째 인자가 doc의 새로 지어줄 id(=document이름)인데, 랜덤하고 유니크한 이름으로 하면 좋을 것 같음
-  //   doc(db, "list", "e0yGMFbLPl820UpTXoDr"), {
-  //     UId: "pBUI0fRoSWc6dcrmaLH8EhN5Sf73",
-  //     item_name: "롱코트사고싶다",
-  //     courier: "04",
-  //     invoice_num: "555327458603"
-  //TODO: timestamp 기록해서 추가 필요
-  //     });
+  
+});
+
+//api for adding item to track list
+router.post('/addItem', async (req, res) => {
+  
+  const docId = Math.random().toString(36).substr(2, 16);
+
+  // parse the UId from the req header Cookie
+  var user_ID = req.headers.cookie;
+  user_ID = user_ID.slice(4, user_ID.length - 1);
+
+  try {
+  // Add a new document in collection "list"
+    await setDoc(
+
+    // TODO: doc()의 3번째 인자가 doc의 새로 지어줄 id(=document이름)인데, 랜덤하고 유니크한 이름으로 하면 좋을 것 같음
+    // doc(db, "list", "e0yGMFbLPl820UpTXoDr"), {
+    //   UId: "pBUI0fRoSWc6dcrmaLH8EhN5Sf73",
+    //   item_name: "롱코트사고싶다",
+    //   courier: "04",
+    //   invoice_num: "555327458603",
+    //   last_update: new Date()
+    //   });
+
+      doc(db, "list", docId), {
+        UId: user_ID,
+        item_name: req.get('item_name'),
+        courier: req.get('courier'),
+        invoice_num: req.get('invoice_num'),
+        last_update: new Date()
+      });
+    res.json({ success: true });
+  } catch (error) {
+      //TODO: 다시 로그인 창으로 가야함.
+      //   res.render(viewPath + 'login.html');
+      res.status(406).json({ 
+        success: false, 
+        ErrorMsg: error
+      });
+  }
 });
 export default router;
