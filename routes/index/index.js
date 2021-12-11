@@ -5,6 +5,8 @@ import { getFirestore, collection, getDocs } from 'firebase/firestore/lite';
 import { initializeApp } from "firebase/app";
 import { signup, login} from '../firebase/service.js';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getDatabase, ref, set} from "firebase/database";
+
 
 // import firebabe from 'firebase';
 
@@ -12,7 +14,7 @@ const router = Router();
 const viewPath = path.resolve() + '/views/';
 
 const app = initializeApp(firebaseConfig);
-let database = getFirestore(app);
+const database = getDatabase();
 const auth = getAuth();
 
 router.get('/', function (req, res) {
@@ -28,7 +30,6 @@ router.get('/auth', function (req, res) {
 
 //api to deal with login request
 router.get('/login', function (req, res) {
-  //TODO://로그인 요청을 받는 api를 만들어야됨
   var user_info = {
     email: req.get('email'),
     passwd: req.get('passwd')
@@ -58,7 +59,6 @@ router.get('/signup', function (req, res) {
 });
 
 router.post('/register', function (req, res) {
-  //TODO://회원가입 요청을 받는 api를 만들어야됨
   var user_info = {
     email: req.get('email'),
     passwd: req.get('passwd')
@@ -68,6 +68,7 @@ router.post('/register', function (req, res) {
       // Signed in
       console.log("then")
       const user = userCredential.user;
+      //TODO: 회원가입 성공시, db 도 생성해주기
       res.sendFile(viewPath + 'login.html')
       // ...
     })
