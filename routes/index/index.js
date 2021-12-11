@@ -17,6 +17,8 @@ router.get('/signup', function (req, res) {
 });
 
 router.get('/detail/:id', function (req, res) {
+  const { id } = req.params;
+  console.log(id);
   res.sendFile(viewPath + 'detail.html');
 });
 

@@ -7,7 +7,7 @@ import index from './routes/index/index.js';
 const app = express();
 
 app.use(express.static('public'));
-app.use(morgan('combined'));
+app.use(morgan('dev'));
 
 const viewPath = path.resolve() + '/views/';
 
