@@ -1,6 +1,7 @@
 @import url('./reset.css');
 
 /* page css */
+@import url('./pages/index.css');
 @import url('./pages/login.css');
 
 /* component css */
