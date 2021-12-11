@@ -1,0 +1,18 @@
+.container-subheader {
+  display: grid;
+  align-items: center;
+  padding: 1.25rem var(--common-padding);
+
+  grid-template-columns: 20rem 1fr;
+}
+
+.subheader__title {
+  font-size: 1.75rem;
+  width: 20rem;
+  text-align: center;
+}
+
+.subheader__description {
+  font-size: 1.25rem;
+  text-align: center;
+}

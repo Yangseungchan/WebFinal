@@ -3,6 +3,7 @@ import path from 'path';
 import morgan from 'morgan';
 import api from './routes/api/customers.js';
 import index from './routes/index/index.js';
+import ejs from 'ejs';
 
 // import {example} from './routes/firebase/login.js';
 
@@ -24,7 +25,10 @@ import index from './routes/index/index.js';
 
 const app = express();
 
-app.use(express.static('public'));
+app.set('view engine', 'ejs');
+app.engine('html', ejs.renderFile);
+
+https: app.use(express.static('public'));
 app.use(morgan('dev'));
 
 const viewPath = path.resolve() + '/views/';

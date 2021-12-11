@@ -78,13 +78,14 @@ router.post('/register', function (req, res) {
       res.sendFile(viewPath + 'login.html')
       // ..
     });
+  res.render(viewPath + 'index.html');
 });
 
 router.get('/detail/:id', function (req, res) {
   //리스트에서 아이템 별로 순서대로 1 2 3 4 아이디 부여
   const { id } = req.params;
   console.log(id);
-  res.sendFile(viewPath + 'detail.html');
+  res.render(viewPath + 'detail.html');
 });
 
 export default router;
