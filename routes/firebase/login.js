@@ -12,3 +12,9 @@ signInWithEmailAndPassword(auth, email, password)
     const errorCode = error.code;
     const errorMessage = error.message;
   });
+
+  // export function example(){
+
+  // }
+
+  // export default example;

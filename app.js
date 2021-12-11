@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import api from './routes/api/customers.js';
 import index from './routes/index/index.js';
 
+// import {example} from './routes/firebase/login.js';
 
 
 //firebase admin init part
