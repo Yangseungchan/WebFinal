@@ -1,0 +1,37 @@
+.custom__btn {
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.custom__btn:hover,
+.custom__btn:active,
+.custom__btn:focus {
+  color: white;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.custom__btn-primary {
+  background: var(--primary-color);
+}
+
+.custom__btn-primary:hover {
+  background-color: var(--secondary-color);
+}
+
+.custom__btn-purple {
+  background: var(--purple-color);
+}
+
+.custom__btn-purple:hover {
+  background-color: var(--purple-hover-color);
+}
+
+.custom__btn-red {
+  background: var(--red-color);
+}
+
+.custom__btn-red:hover {
+  background-color: var(--red-hover-color);
+}
