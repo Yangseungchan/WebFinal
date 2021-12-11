@@ -9,6 +9,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
+import { getDatabase, ref, set} from "firebase/database";
+
 
 // import firebabe from 'firebase';
 
@@ -16,7 +18,7 @@ const router = Router();
 const viewPath = path.resolve() + '/views/';
 
 const app = initializeApp(firebaseConfig);
-let database = getFirestore(app);
+const database = getDatabase();
 const auth = getAuth();
 
 router.get('/', function (req, res) {
@@ -35,30 +37,6 @@ router.get('/login', (req, res) => {
 });
 
 //api to deal with login request
-// router.get('/login', function (req, res) {
-//   //TODO: 로그인 요청을 받는 api를 만들어야됨
-//   var user_info = {
-//     email: req.get('email'),
-//     passwd: req.get('passwd'),
-//   };
-//   console.log(user_info);
-//   signInWithEmailAndPassword(auth, user_info.email, user_info.passwd)
-//     .then(userCredential => {
-//       // Signed in
-//       console.log('login success');
-//       const user = userCredential.user;
-//       //TODO: 로그인
-//       res.render(viewPath + 'signup.html');
-//       // ...
-//     })
-//     .catch(error => {
-//       const errorCode = error.code;
-//       const errorMessage = error.message;
-//       console.log(errorMessage);
-//       //TODO: 다시 로그인 창으로 가야함.
-//       res.render(viewPath + 'login.html');
-//     });
-// });
 
 router.get('/signup', function (req, res) {
   res.render(viewPath + 'signup.html');
@@ -66,7 +44,6 @@ router.get('/signup', function (req, res) {
 });
 
 router.post('/register', function (req, res) {
-  //TODO://회원가입 요청을 받는 api를 만들어야됨
   var user_info = {
     email: req.get('email'),
     passwd: req.get('passwd'),
@@ -77,6 +54,7 @@ router.post('/register', function (req, res) {
       console.log('then');
       const user = userCredential.user;
       res.render(viewPath + 'login.html');
+
       // ...
     })
     .catch(error => {
