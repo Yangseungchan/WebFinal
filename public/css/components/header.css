@@ -1,0 +1,9 @@
+.container-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header__logout {
+  font-weight: 600;
+}
