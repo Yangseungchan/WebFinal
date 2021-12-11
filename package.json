@@ -17,6 +17,8 @@
     "@babel/node": "^7.16.0",
     "@babel/preset-env": "^7.16.4",
     "express": "^4.17.1",
+    "firebase": "^9.6.1",
+    "firebase-admin": "^10.0.0",
     "morgan": "^1.10.0"
   },
   "devDependencies": {
