@@ -10,6 +10,9 @@ function ValidateEmail(mail) {
 
 $(document).ready(function () {
   $('.spinner-container').hide();
+  $('.logo').click(() => {
+    $(location).attr('href', `${domain}`);
+  });
   $('.btn-signup').click(() => {
     $(location).attr('href', `${domain}signup`);
   });

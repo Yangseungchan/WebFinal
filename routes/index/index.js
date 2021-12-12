@@ -22,32 +22,32 @@ const auth = getAuth();
 router.get('/', function (req, res) {
   if (!req.cookies['UId']) {
     res.redirect('/login');
+  } else {
+    res.render(viewPath + 'index.html');
   }
-  res.render(viewPath + 'index.html');
 });
 
 router.get('/login', (req, res) => {
   if (req.cookies['UId']) {
     res.redirect('/');
+  } else {
+    res.render(viewPath + 'login.html');
   }
-  res.render(viewPath + 'login.html');
 });
 
 router.get('/signup', function (req, res) {
   if (req.cookies['UId']) {
     res.redirect('/');
+  } else {
+    res.render(viewPath + 'signup.html');
   }
-  res.render(viewPath + 'signup.html');
 });
 
 router.get('/detail', function (req, res) {
-  console.log(req.query.id);
-  console.log(req.query.courier);
   res.render(viewPath + 'detail.html');
 });
 
 router.get('/logout', function (req, res) {
-  console.log('logout has been reached');
   res.clearCookie('UId', { path: '/' });
   res.redirect('/login');
 });
