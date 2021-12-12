@@ -12,6 +12,7 @@ import {
   setDoc,
   doc,
   updateDoc,
+  getDoc,
 
 } from 'firebase/firestore';
 // import { initializeApp } from 'firebase/app';
@@ -216,40 +217,41 @@ router.post('/addItem', async (req, res) => {
 
 router.get('/trackingInfo', (req, res) => {
   try {
-    // var returnObject = [];
     GETRequst(req).then(response => {
-      // console.log(response.data.trackingDetails)
-      var tmp = {
-        invoice_num: response.data.invoiceNo,
-        level: response.data.level,
-        trackingDetails: response.data.trackingDetails,
-      };
-      // returnObject.push(tmp);
-      res.contentType('application/json');
-      res.send(JSON.stringify(tmp));
+        // console.log(response.data.trackingDetails)
+        var tmp = {
+          invoice_num: response.data.invoiceNo,
+          level: response.data.level,
+          trackingDetails: response.data.trackingDetails,
+        };
+        // returnObject.push(tmp);
+        res.contentType('application/json');
+        res.send(JSON.stringify(tmp));
 
-      async function addDatatoFirebase(){
-        //get the instance for specific collection in DB
-        const list_collection = collection(db, 'list');
+        // async function addDatatoFirebase(){
+        // //get the instance for specific collection in DB
+        // const list_collection = collection(db, 'list');
 
-        //search for all the documents which are matching with USER ID
-        const q = query(list_collection, where('UId', '==', user_ID));
+        // //search for all the documents which are matching with USER ID
+        // console.log("test");
+        // console.log(tmp.invoice_num);
+        // console.log(user_ID);
+        // const q = query(list_collection, where('invoice_num', '==', tmp.invoice_num), where('UId', "==", user_ID));
 
-        const targetDoc = doc()
-        // await setDoc(
-        //   doc(db, 'list', docId),{
-        //     UId: user_ID, //string
-        //     item_name: req.query.item_name, //string
-        //     courier: req.query.courier, //string
-        //     invoice_num: req.query.invoice_num, //string
-        //     last_update: new Date(), //timestamp type
-        //     level: response.data.level //string 
-        //     }
+        // const querySnapshot = await getDocs(q);
+        // var docId;
+        // querySnapshot.forEach(doc => {
+        //   docId = doc.id;
+        //   console.log(docId);
+        // });
+        // doc(list_collection, docId).update(
+        //   {
+        //     level: response.data.level,
+        //     last_update: new Date()
+        //   }
         // );
-
-      }
-      addDatatoFirebase();
-      // res.send(JSON.stringify(returnObject));
+        // }
+      // addDatatoFirebase();
     });
   } catch (error) {
     console.error(error);
