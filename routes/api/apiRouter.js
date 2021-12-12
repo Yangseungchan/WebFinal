@@ -99,6 +99,7 @@ router.get('/init', async (req, res) => {
       invoice_num: item_data.invoice_num,
       item_name: item_data.item_name,
       last_update: item_data.last_update,
+      level: item_data.level
     };
     item_list.push(item);
     console.log(item);
