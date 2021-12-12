@@ -272,18 +272,22 @@ $(document).ready(function () {
   const invoice_num = getUrlVars()['id'];
 
   // TODO : trackingInfo API 연동
-  // $.ajax({
-  //   url: domain + 'api/trackingInfo',
-  //   type: 'GET',
-  //   data: {
-  //     courier,
-  //     invoice_num,
-  //   },
-  //   dataType: 'json',
-  //   contentType: 'application/json; charset=utf-8',
-  //   success: res => {},
-  //   error: e => {},
-  // });
+  $.ajax({
+    url: domain + 'api/trackingInfo',
+    type: 'GET',
+    data: {
+      courier,
+      invoice_num,
+    },
+    dataType: 'json',
+    contentType: 'application/json; charset=utf-8',
+    success: res => {
+      const { invoice_num, level, trackingDetails } = res;
+    },
+    error: e => {
+      alert('Error on updating detail');
+    },
+  });
 
   updateDetail(sample);
 

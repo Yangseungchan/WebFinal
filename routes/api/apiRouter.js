@@ -214,20 +214,19 @@ router.post('/addItem', async (req, res) => {
 router.get('/trackingInfo', (req, res) => {
   try {
     GETRequst(req).then(response => {
-        // console.log(response.data.trackingDetails)
-        var tmp = {
-          invoice_num: response.data.invoiceNo,
-          level: response.data.level,
-          trackingDetails: response.data.trackingDetails,
-        };
-        // returnObject.push(tmp);
-        res.contentType('application/json');
-        res.send(JSON.stringify(tmp));
-      
+      // console.log(response.data.trackingDetails)
+      var tmp = {
+        invoice_num: response.data.invoiceNo,
+        level: response.data.level,
+        trackingDetails: response.data.trackingDetails,
+      };
+      // returnObject.push(tmp);
+      res.contentType('application/json');
+      res.send(JSON.stringify(tmp));
+
       async function addDatatoFirebase() {
         //get the instance for specific collection in DB
         const list_collection = collection(db, 'list');
-
 
         // //search for all the documents which are matching with USER ID
         // console.log("test");
@@ -247,7 +246,8 @@ router.get('/trackingInfo', (req, res) => {
         //   }
         // );
         // }
-      // addDatatoFirebase();
+        // addDatatoFirebase();
+      }
     });
   } catch (error) {
     console.error(error);
