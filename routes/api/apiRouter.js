@@ -11,6 +11,8 @@ import {
   where,
   setDoc,
   doc,
+  updateDoc,
+
 } from 'firebase/firestore';
 // import { initializeApp } from 'firebase/app';
 import {
@@ -126,48 +128,62 @@ const GETRequst = (req) => {
     }
 
 };
+async function redundantInvoiceNumCheck(invoice_num, user_ID){
+  //get the instance for specific collection in DB
+  const list_collection = collection(db, 'list');
 
+  //search for all the documents which are matching with USER ID
+  const q = query(list_collection, where('invoice_num', '==', invoice_num), where('UId', "==", user_ID));
+  const querySnapshot = await getDocs(q);
+  var count = 0;
+  // console.log(querySnapshot);
+  querySnapshot.forEach(doc => {
+    count++;
+    // console.log(doc);
+  });
+  console.log("count = " + count);
+  if(count === 0)
+    return true;
+  else{
+    return false;
+  }
+}
 //api for adding item to track list
 router.post('/addItem', async (req, res) => {
-  try {
-    // var returnObject = [];
-    GETRequst(req).then(response => {
-      // console.log(response.data.status);
-      if(response.data.status == false){
-        res.status(406).json({
-          success: false,
-          // ErrorMsg: response.data.msg,
-        });
-      }
-      else{
-        const docId = Math.random().toString(36).substr(2, 16);
 
-        // parse the UId from the req header Cookie
-        var user_ID = req.cookies['UId'];
+  // parse the UId from the req header Cookie
+  var user_ID = req.cookies['UId'];
+  const result = await redundantInvoiceNumCheck(req.query.invoice_num, user_ID)
+  if(result === true){
+    //there are only one Document for these (invoice_num, UId)
+      try {
+        // var returnObject = [];
+        GETRequst(req).then(response => {
+          // console.log(response.data.status);
+          if(response.data.status == false){
+          res.status(406).json({
+            success: false,
+            ErrorMsg: response.data.msg,
+            });
+          }
+          else{
+          const docId = Math.random().toString(36).substr(2, 16);
 
-        try {
-          // Add a new document in collection "list"
-          async function addDatatoFirebase(){
-            await setDoc(
-            doc(db, 'list', docId),{
-              UId: user_ID, //string
-              item_name: req.query.item_name, //string
-              courier: req.query.courier, //string
-              invoice_num: req.query.invoice_num, //string
-              last_update: new Date(), //timestamp type
-              level: response.data.level //string 
-            }
-            // TODO: doc()의 3번째 인자가 doc의 새로 지어줄 id(=document이름)인데, 랜덤하고 유니크한 이름으로 하면 좋을 것 같음
-            // doc(db, "list", "e0yGMFbLPl820UpTXoDr"), {
-            //   UId: "pBUI0fRoSWc6dcrmaLH8EhN5Sf73",
-            //   item_name: "롱코트사고싶다",
-            //   courier: "04",
-            //   invoice_num: "555327458603",
-            //   last_update: new Date()
-            //   });
+          try {
+            // Add a new document in collection "list"
+            async function addDatatoFirebase(){
+              await setDoc(
+              doc(db, 'list', docId),{
+                UId: req.cookies['UId'], //string
+                item_name: req.query.item_name, //string
+                courier: req.query.courier, //string
+                invoice_num: req.query.invoice_num, //string
+                last_update: new Date(), //timestamp type
+                level: response.data.level //string 
+              }
             );
             //TODO: item 추가 했으니, 다시 메인페이지로 가야함.
-          }
+            }
 
           addDatatoFirebase();
           res.json({ success: true });
@@ -188,6 +204,14 @@ router.post('/addItem', async (req, res) => {
       // ErrorMsg: error
     });
   }
+  }
+  //this is the only one Document for these (invoice_num, UId)
+  else{
+    res.status(406).json({
+          success: false,
+          ErrorMsg: "Item already in the DB",
+    });
+  }
 });
 
 router.get('/trackingInfo', (req, res) => {
@@ -203,6 +227,28 @@ router.get('/trackingInfo', (req, res) => {
       // returnObject.push(tmp);
       res.contentType('application/json');
       res.send(JSON.stringify(tmp));
+
+      async function addDatatoFirebase(){
+        //get the instance for specific collection in DB
+        const list_collection = collection(db, 'list');
+
+        //search for all the documents which are matching with USER ID
+        const q = query(list_collection, where('UId', '==', user_ID));
+
+        const targetDoc = doc()
+        // await setDoc(
+        //   doc(db, 'list', docId),{
+        //     UId: user_ID, //string
+        //     item_name: req.query.item_name, //string
+        //     courier: req.query.courier, //string
+        //     invoice_num: req.query.invoice_num, //string
+        //     last_update: new Date(), //timestamp type
+        //     level: response.data.level //string 
+        //     }
+        // );
+
+      }
+      addDatatoFirebase();
       // res.send(JSON.stringify(returnObject));
     });
   } catch (error) {
