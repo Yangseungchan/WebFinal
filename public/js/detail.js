@@ -1,135 +1,3 @@
-const sample = {
-  // timeString, where, kind
-  trackingDetails: [
-    {
-      time: 1636539283000,
-      timeString: '2021-11-10 19:14:43',
-      code: null,
-      where: '고촌콘솔Hub',
-      kind: '간선하차',
-      telno: '',
-      telno2: '',
-      remark: null,
-      level: 3,
-      manName: '',
-      manPic: '',
-    },
-    {
-      time: 1636539310000,
-      timeString: '2021-11-10 19:15:10',
-      code: null,
-      where: '고촌콘솔Hub',
-      kind: '행낭포장',
-      telno: '',
-      telno2: '',
-      remark: null,
-      level: 3,
-      manName: '',
-      manPic: '',
-    },
-    {
-      time: 1636540621000,
-      timeString: '2021-11-10 19:37:01',
-      code: null,
-      where: '고촌콘솔Hub',
-      kind: '간선상차',
-      telno: '',
-      telno2: '',
-      remark: null,
-      level: 3,
-      manName: '',
-      manPic: '',
-    },
-    {
-      time: 1636562825000,
-      timeString: '2021-11-11 01:47:05',
-      code: null,
-      where: '군포HUB',
-      kind: '간선하차',
-      telno: '',
-      telno2: '',
-      remark: null,
-      level: 3,
-      manName: '',
-      manPic: '',
-    },
-    {
-      time: 1636562870000,
-      timeString: '2021-11-11 01:47:50',
-      code: null,
-      where: '군포HUB',
-      kind: '간선하차',
-      telno: '',
-      telno2: '',
-      remark: null,
-      level: 3,
-      manName: '',
-      manPic: '',
-    },
-    {
-      time: 1636562958000,
-      timeString: '2021-11-11 01:49:18',
-      code: null,
-      where: '군포HUB',
-      kind: '간선상차',
-      telno: '',
-      telno2: '',
-      remark: null,
-      level: 3,
-      manName: '',
-      manPic: '',
-    },
-    {
-      time: 1636602308000,
-      timeString: '2021-11-11 12:45:08',
-      code: null,
-      where: '군포',
-      kind: '간선하차',
-      telno: '',
-      telno2: '',
-      remark: null,
-      level: 3,
-      manName: '',
-      manPic: '',
-    },
-    {
-      time: 1636604129000,
-      timeString: '2021-11-11 13:15:29',
-      code: null,
-      where: '경기군포신중앙',
-      kind: '배달출발\n(배달예정시간\n:14∼16시)',
-      telno: '',
-      telno2: '01040384205',
-      remark: null,
-      level: 5,
-      manName: '정용진',
-      manPic: '',
-    },
-    {
-      time: 1636608738000,
-      timeString: '2021-11-11 14:32:18',
-      code: null,
-      where: '경기군포신중앙',
-      kind: '배달완료',
-      telno: '',
-      telno2: '01040384205',
-      remark: null,
-      level: 6,
-      manName: '정용진',
-      manPic: '',
-    },
-  ],
-  level: 6,
-  invoice_num: '557909096672',
-  item_name: '택배 보내셈 5',
-  courier: '04',
-  item_id: '43qyexnighj',
-  last_update: {
-    seconds: 1639284859,
-    nanoseconds: 476000000,
-  },
-};
-
 const domain = 'http://localhost:8001/';
 
 const courierList = {
@@ -198,14 +66,7 @@ const parseDateToString = date => {
 };
 
 const updateDetail = data => {
-  const {
-    courier,
-    invoice_num,
-    item_name,
-    level,
-    trackingDetails,
-    last_update: { seconds: time_stamp },
-  } = data;
+  const { courier, invoice_num, item_name, level, trackingDetails } = data;
   const [levelText, levelClass] = getBadgeContent(level);
 
   // badge update
@@ -247,7 +108,7 @@ const updateDetail = data => {
 };
 
 $(document).ready(function () {
-  $('.spinner-container').hide();
+  $('.spinner-container').show();
   $('.logo').click(() => {
     $(location).attr('href', `${domain}`);
   });
@@ -267,29 +128,31 @@ $(document).ready(function () {
     }
     return vars;
   }
-
   const courier = getUrlVars()['courier'];
   const invoice_num = getUrlVars()['id'];
-
   // TODO : trackingInfo API 연동
   $.ajax({
-    url: domain + 'api/trackingInfo',
+    url:
+      domain +
+      'api/trackingInfo?' +
+      $.param({
+        courier: courier,
+        invoice_num: invoice_num,
+      }),
     type: 'GET',
-    data: {
-      courier,
-      invoice_num,
-    },
     dataType: 'json',
     contentType: 'application/json; charset=utf-8',
     success: res => {
-      const { invoice_num, level, trackingDetails } = res;
+      const { invoice_num, level, trackingDetails, item_name } = res;
+      // update detail page
+      updateDetail({ courier, invoice_num, item_name, level, trackingDetails });
+      $('.spinner-container').hide();
     },
     error: e => {
       alert('Error on updating detail');
+      $('.spinner-container').hide();
     },
   });
-
-  updateDetail(sample);
 
   $('.btn-update-detail').click(() => {
     location.reload();

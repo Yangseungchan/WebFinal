@@ -153,7 +153,7 @@ async function redundantInvoiceNumCheck(invoice_num, user_ID) {
 router.post('/addItem', async (req, res) => {
   // parse the UId from the req header Cookie
   var user_ID = req.cookies['UId'];
-  
+
   const result = await redundantInvoiceNumCheck(req.query.invoice_num, user_ID);
   if (result === true) {
     //there are only one Document for these (invoice_num, UId)
@@ -217,34 +217,38 @@ router.get('/trackingInfo', (req, res) => {
   var user_ID = req.cookies['UId'];
 
   try {
-    GETRequst(req).then(async(response) => {
+    GETRequst(req).then(async response => {
       // console.log(response.data.trackingDetails)
       var tmp = {
-          invoice_num: response.data.invoiceNo,
-          level: response.data.level,
-          trackingDetails: response.data.trackingDetails,
+        invoice_num: response.data.invoiceNo,
+        level: response.data.level,
+        trackingDetails: response.data.trackingDetails,
       };
-      
+
       async function addDatatoFirebase() {
         // get the instance for specific collection in DB
         const list_collection = collection(db, 'list');
 
         //search for all the documents which are matching with USER ID
-        console.log("test");
-        console.log(user_ID);
-        console.log(response.data.invoiceNo);
-        const q = query(list_collection, where('invoice_num', '==', response.data.invoiceNo), where('UId', "==", user_ID));
+        // console.log('test');
+        // console.log(user_ID);
+        // console.log(response.data.invoiceNo);
+        const q = query(
+          list_collection,
+          where('invoice_num', '==', response.data.invoiceNo),
+          where('UId', '==', user_ID)
+        );
         const querySnapshot = await getDocs(q);
         querySnapshot.forEach(doc => {
           console.log(doc.data().item_name);
           tmp.item_name = doc.data().item_name;
         });
       }
-        const result = await addDatatoFirebase();
+      const result = await addDatatoFirebase();
 
-        res.contentType('application/json');
-        res.send(JSON.stringify(tmp));
-        console.log("tmp.item_name_fromDB: " + tmp.item_name);
+      res.contentType('application/json');
+      res.send(JSON.stringify(tmp));
+      console.log('tmp.item_name_fromDB: ' + tmp.item_name);
     });
   } catch (error) {
     console.error(error);
