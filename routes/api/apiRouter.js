@@ -9,7 +9,7 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from 'firebase/auth';
-
+import axios from 'axios';
 
 const router = Router();
 const viewPath = path.resolve() + '/views/';
@@ -23,7 +23,7 @@ router.get('/login', (req, res) => {
     email: req.get('email'),
     passwd: req.get('passwd'),
   };
-  console.log(user_info);
+  // console.log(req.header.cookie);
   signInWithEmailAndPassword(auth, user_info.email, user_info.passwd)
     .then(userCredential => {
       // Signed in
@@ -86,12 +86,12 @@ router.get('/init', async (req, res) =>{
   querySnapshot.forEach((doc) => {
     var item_data = doc.data()
     var item = {
-      item_id: item_data.item_id,
       UId: user_ID,
       courier: item_data.courier,
       invoice_num: item_data.invoice_num,
       item_name: item_data.item_name,
-      last_update: item_data.last_update
+      last_update: item_data.last_update,
+      //TODO: level도 줘야함
     };
     item_list.push(item);
     console.log(item);
@@ -104,14 +104,13 @@ router.get('/init', async (req, res) =>{
   //return the JSON as response
   res.contentType('application/json');
   res.send(JSON.stringify(item_list));
-
-  
 });
 
 //api for adding item to track list
 router.post('/addItem', async (req, res) => {
   
   const docId = Math.random().toString(36).substr(2, 16);
+  const itemID = Math.random().toString(36).substr(2, 16);
 
   // parse the UId from the req header Cookie
   var user_ID = req.headers.cookie;
@@ -135,7 +134,7 @@ router.post('/addItem', async (req, res) => {
         item_name: req.get('item_name'), //string
         courier: req.get('courier'), //string
         invoice_num: req.get('invoice_num'), //string
-        last_update: new Date() //timestamp type
+        last_update: new Date()//timestamp type
       }
     );
     //TODO: item 추가 했으니, 다시 메인페이지로 가야함.
@@ -147,6 +146,48 @@ router.post('/addItem', async (req, res) => {
         success: false, 
         ErrorMsg: error
       });
+  }
+});
+
+
+const GETRequst = (req) => {
+    try {
+      // var address = "https://info.sweettracker.co.kr/api/v1/trackingInfo";
+      // address = address + "?t_key=" + "LWPd5pDTIOygHVnt2eBohQ" + "&t_code=" + req.query.courier+ "&t_invoice=" + req.query.invoice_num;
+      // console.log(address);
+      return axios.get('https://info.sweettracker.co.kr/api/v1/trackingInfo',{
+        params: {
+          t_key: 'LWPd5pDTIOygHVnt2eBohQ',
+          t_code: req.query.courier,
+          t_invoice: req.query.invoice_num
+        }
+      });
+    } catch (error) {
+      console.error(error)
+    }
+};
+
+router.get('/trackingInfo', (req, res) => {
+  try {
+    // var returnObject = [];
+    GETRequst(req).then(response => {
+    // console.log(response.data.trackingDetails)
+    var tmp = {
+      invoice_num: response.data.invoiceNo,
+      level: response.data.level,
+      trackingDetails: response.data.trackingDetails
+    };
+    // returnObject.push(tmp);
+    res.contentType('application/json');
+    res.send(JSON.stringify(tmp));
+    // res.send(JSON.stringify(returnObject));
+  });
+  } catch (error) {
+    console.error(error);
+    res.status(400).json({ 
+      success: false,
+      ErrorMsg: error
+    });
   }
 });
 export default router;
