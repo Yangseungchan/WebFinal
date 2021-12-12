@@ -247,6 +247,13 @@ const updateDetail = data => {
 
 $(document).ready(function () {
   // get request from api using ajax
-
   updateDetail(sample);
+
+  $('.btn-update-detail').click(() => {
+    location.reload();
+  });
+
+  $('.btn-delete-detail').click(() => {
+    console.log('click delete');
+  });
 });

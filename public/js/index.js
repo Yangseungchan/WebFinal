@@ -49,7 +49,7 @@ const getBadgeContent = level => {
 };
 
 // function that generates createListBlock and appends it to list
-const createListBlock = (id, name, level, updated) => {
+const createListBlock = (id, name, level, updated, courier) => {
   // create following html element
   //  <div class="list__block">
   //    <div class="list__body">
@@ -81,7 +81,7 @@ const createListBlock = (id, name, level, updated) => {
   });
 
   listBlock.click(() => {
-    $(location).attr('href', `${domain}detail/${id}`);
+    $(location).attr('href', `${domain}detail?id=${id}&courier=${courier}`);
   });
 
   const listBody = $('<div></div>', {
@@ -113,7 +113,7 @@ const createListBlock = (id, name, level, updated) => {
     class: 'list__status listbody__item',
   });
 
-  const [levelText, levelClass] = getBadgeContent(level);
+  const [levelText, levelClass] = getBadgeContent(Number(level));
 
   const listBodyContentStatusBadge = $('<span></span>', {
     class: `badge ${levelClass}`,
@@ -150,19 +150,39 @@ const createListBlock = (id, name, level, updated) => {
 
 // function that loads user's package list
 const loadPackageList = () => {
-  createListBlock(1, '택배 받으셈1', 1, new Date());
-  createListBlock(2, '택배 받으셈2', 2, new Date());
-  createListBlock(3, '택배 받으셈3', 3, new Date());
-  createListBlock(4, '택배 받으셈4', 4, new Date());
-  createListBlock(5, '택배 받으셈5', 5, new Date());
-  createListBlock(5, '택배 받으셈6', 6, new Date());
-
-  // TODO : load list from backend
+  $.ajax({
+    url: domain + 'api/init',
+    type: 'GET',
+    dataType: 'json',
+    contentType: 'application/json; charset=utf-8',
+    success: res => {
+      res.forEach(data => {
+        const {
+          invoice_num,
+          item_name,
+          last_update: { seconds: time_stamp },
+          level,
+          courier,
+        } = data;
+        createListBlock(
+          invoice_num,
+          item_name,
+          level,
+          new Date(time_stamp * 1000),
+          courier
+        );
+      });
+    },
+    error: e => {
+      console.log('error in init');
+    },
+  });
 };
 
 $(document).ready(function () {
-  loadPackageList();
+  loadPackageList(); // load items from server using ajax
 
+  // add package
   $('.btn-add-package').click(() => {
     // TODO : add modal event
     const packageName = $('#packageName').val();
@@ -172,7 +192,7 @@ $(document).ready(function () {
     $.ajax({
       url: domain + 'api/addItem',
       type: 'POST',
-      headers: {
+      data: {
         item_name: packageName,
         courier: courierCode,
         invoice_num: invoiceNum,
@@ -180,7 +200,8 @@ $(document).ready(function () {
       dataType: 'json',
       contentType: 'application/json; charset=utf-8',
       success: res => {
-        alert('add complete');
+        alert('Adding new package has been successful');
+        location.reload();
       },
       error: e => {
         console.log('add failure');

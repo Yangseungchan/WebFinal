@@ -33,8 +33,6 @@ router.get('/login', (req, res) => {
   res.render(viewPath + 'login.html');
 });
 
-//api to deal with login request
-
 router.get('/signup', function (req, res) {
   if (req.cookies['UId']) {
     res.redirect('/');
@@ -42,7 +40,9 @@ router.get('/signup', function (req, res) {
   res.render(viewPath + 'signup.html');
 });
 
-router.get('/detail/:id', function (req, res) {
+router.get('/detail', function (req, res) {
+  console.log(req.query.id);
+  console.log(req.query.courier);
   res.render(viewPath + 'detail.html');
 });
 
