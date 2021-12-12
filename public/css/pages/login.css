@@ -1,13 +1,3 @@
-.login-body {
-  position: relative;
-}
-
-.login-spinner {
-  position: absolute;
-  top: 50%;
-  right: 50%;
-}
-
 .login__container {
   display: flex;
   align-items: center;

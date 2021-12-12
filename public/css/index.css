@@ -13,6 +13,7 @@
 @import url('./components/button.css');
 @import url('./components/list.css');
 @import url('./components/modal.css');
+@import url('./components/spinner.css');
 
 :root {
   --primary-color: #74b9ff;
@@ -37,6 +38,7 @@ body {
   flex-direction: column;
   align-items: center;
   height: 100vh;
+  position: relative;
 }
 
 .title-font {

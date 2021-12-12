@@ -172,14 +172,16 @@ const loadPackageList = () => {
           courier
         );
       });
+      $('.spinner-container').hide();
     },
     error: e => {
-      console.log('error in init');
+      alert('Error in loading list');
     },
   });
 };
 
 $(document).ready(function () {
+  // $('.spinner-container').show();
   loadPackageList(); // load items from server using ajax
 
   // add package

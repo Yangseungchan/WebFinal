@@ -9,6 +9,7 @@ function ValidateEmail(mail) {
 }
 
 $(document).ready(function () {
+  $('.spinner-container').hide();
   $('.btn-signup').click(() => {
     $(location).attr('href', `${domain}signup`);
   });
@@ -28,6 +29,7 @@ $(document).ready(function () {
     }
     // login trial
     else {
+      $('.spinner-container').show();
       $.ajax({
         url: domain + 'api/login',
         type: 'GET',
@@ -45,7 +47,7 @@ $(document).ready(function () {
         error: e => {
           // password error
           alert('Your password is wrong');
-          // console.log(e);
+          $('.spinner-container').hide();
         },
       });
     }
