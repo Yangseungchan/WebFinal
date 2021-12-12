@@ -128,7 +128,7 @@ const createListBlock = (id, name, level, updated, courier) => {
   // updated date generation
   const listBodyContentUpdatedLabel = $('<div></div>', {
     class: 'list__updated-label',
-    text: 'Last Update : ',
+    text: 'Created at : ',
   });
   const listBodyContentUpdatedDate = $('<div></div>', {
     class: 'list__updated-date',
@@ -184,6 +184,10 @@ $(document).ready(function () {
   // $('.spinner-container').show();
   loadPackageList(); // load items from server using ajax
 
+  $('.logo').click(() => {
+    $(location).attr('href', `${domain}`);
+  });
+
   // add package
   $('.btn-add-package').click(() => {
     // TODO : add modal event
@@ -191,14 +195,18 @@ $(document).ready(function () {
     const courierCode = $('#courierSelect').val();
     const invoiceNum = $('#invoiceNumber').val();
 
+    console.log('invoiceNum : ', invoiceNum);
+
     $.ajax({
-      url: domain + 'api/addItem',
+      url:
+        domain +
+        'api/addItem?' +
+        $.param({
+          item_name: packageName,
+          courier: courierCode,
+          invoice_num: invoiceNum,
+        }),
       type: 'POST',
-      data: {
-        item_name: packageName,
-        courier: courierCode,
-        invoice_num: invoiceNum,
-      },
       dataType: 'json',
       contentType: 'application/json; charset=utf-8',
       success: res => {
@@ -206,7 +214,7 @@ $(document).ready(function () {
         location.reload();
       },
       error: e => {
-        console.log('add failure');
+        alert('[Failure] Check your invoice number and courier');
       },
     });
   });

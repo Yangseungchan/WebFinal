@@ -12,8 +12,6 @@ import {
   setDoc,
   doc,
   updateDoc,
-  getDoc,
-
 } from 'firebase/firestore';
 // import { initializeApp } from 'firebase/app';
 import {
@@ -112,29 +110,32 @@ router.get('/init', async (req, res) => {
   res.send(JSON.stringify(item_list));
 });
 
-const GETRequst = (req) => {
-    try {
-      // var address = "https://info.sweettracker.co.kr/api/v1/trackingInfo";
-      // address = address + "?t_key=" + "LWPd5pDTIOygHVnt2eBohQ" + "&t_code=" + req.query.courier+ "&t_invoice=" + req.query.invoice_num;
-      // console.log(address);
-      return axios.get('https://info.sweettracker.co.kr/api/v1/trackingInfo',{
-        params: {
-          t_key: 'LWPd5pDTIOygHVnt2eBohQ',
-          t_code: req.query.courier,
-          t_invoice: req.query.invoice_num
-        }
-      });
-    } catch (error) {
-      console.error(error)
-    }
-
+const GETRequst = req => {
+  try {
+    // var address = "https://info.sweettracker.co.kr/api/v1/trackingInfo";
+    // address = address + "?t_key=" + "LWPd5pDTIOygHVnt2eBohQ" + "&t_code=" + req.query.courier+ "&t_invoice=" + req.query.invoice_num;
+    // console.log(address);
+    return axios.get('https://info.sweettracker.co.kr/api/v1/trackingInfo', {
+      params: {
+        t_key: 'LWPd5pDTIOygHVnt2eBohQ',
+        t_code: req.query.courier,
+        t_invoice: req.query.invoice_num,
+      },
+    });
+  } catch (error) {
+    console.error(error);
+  }
 };
-async function redundantInvoiceNumCheck(invoice_num, user_ID){
+async function redundantInvoiceNumCheck(invoice_num, user_ID) {
   //get the instance for specific collection in DB
   const list_collection = collection(db, 'list');
 
   //search for all the documents which are matching with USER ID
-  const q = query(list_collection, where('invoice_num', '==', invoice_num), where('UId', "==", user_ID));
+  const q = query(
+    list_collection,
+    where('invoice_num', '==', invoice_num),
+    where('UId', '==', user_ID)
+  );
   const querySnapshot = await getDocs(q);
   var count = 0;
   // console.log(querySnapshot);
@@ -142,75 +143,70 @@ async function redundantInvoiceNumCheck(invoice_num, user_ID){
     count++;
     // console.log(doc);
   });
-  console.log("count = " + count);
-  if(count === 0)
-    return true;
-  else{
+  console.log('count = ' + count);
+  if (count === 0) return true;
+  else {
     return false;
   }
 }
 //api for adding item to track list
 router.post('/addItem', async (req, res) => {
-
   // parse the UId from the req header Cookie
   var user_ID = req.cookies['UId'];
-  const result = await redundantInvoiceNumCheck(req.query.invoice_num, user_ID)
-  if(result === true){
+  const result = await redundantInvoiceNumCheck(req.query.invoice_num, user_ID);
+  if (result === true) {
     //there are only one Document for these (invoice_num, UId)
-      try {
-        // var returnObject = [];
-        GETRequst(req).then(response => {
-          // console.log(response.data.status);
-          if(response.data.status == false){
+    try {
+      // var returnObject = [];
+      GETRequst(req).then(response => {
+        // console.log(response.data.status);
+        if (response.data.status == false) {
           res.status(406).json({
             success: false,
             ErrorMsg: response.data.msg,
-            });
-          }
-          else{
+          });
+        } else {
           const docId = Math.random().toString(36).substr(2, 16);
 
           try {
             // Add a new document in collection "list"
-            async function addDatatoFirebase(){
-              await setDoc(
-              doc(db, 'list', docId),{
+            async function addDatatoFirebase() {
+              await setDoc(doc(db, 'list', docId), {
                 UId: req.cookies['UId'], //string
                 item_name: req.query.item_name, //string
                 courier: req.query.courier, //string
                 invoice_num: req.query.invoice_num, //string
                 last_update: new Date(), //timestamp type
-                level: response.data.level //string 
-              }
-            );
-            //TODO: item 추가 했으니, 다시 메인페이지로 가야함.
+                level: response.data.level, //string
+              });
+              //TODO: item 추가 했으니, 다시 메인페이지로 가야함.
             }
 
-          addDatatoFirebase();
-          res.json({ success: true });
-        } catch (error) {
+            addDatatoFirebase();
+            res.json({ success: true });
+          } catch (error) {
             //TODO: 다시 추가할 item 정보 입력 창으로 가야함
             //   res.render(viewPath + 'login.html');
             res.status(406).json({
               success: false,
               // ErrorMsg: error,
             });
+          }
         }
+      });
+    } catch (error) {
+      console.error(error);
+      res.status(400).json({
+        success: false,
+        // ErrorMsg: error
+      });
     }
-  });
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ 
-      success: false,
-      // ErrorMsg: error
-    });
-  }
   }
   //this is the only one Document for these (invoice_num, UId)
-  else{
+  else {
     res.status(406).json({
-          success: false,
-          ErrorMsg: "Item already in the DB",
+      success: false,
+      ErrorMsg: 'Item already in the DB',
     });
   }
 });
@@ -227,17 +223,17 @@ router.get('/trackingInfo', (req, res) => {
         // returnObject.push(tmp);
         res.contentType('application/json');
         res.send(JSON.stringify(tmp));
+      
+      async function addDatatoFirebase() {
+        //get the instance for specific collection in DB
+        const list_collection = collection(db, 'list');
 
-        // async function addDatatoFirebase(){
-        // //get the instance for specific collection in DB
-        // const list_collection = collection(db, 'list');
 
         // //search for all the documents which are matching with USER ID
         // console.log("test");
         // console.log(tmp.invoice_num);
         // console.log(user_ID);
         // const q = query(list_collection, where('invoice_num', '==', tmp.invoice_num), where('UId', "==", user_ID));
-
         // const querySnapshot = await getDocs(q);
         // var docId;
         // querySnapshot.forEach(doc => {

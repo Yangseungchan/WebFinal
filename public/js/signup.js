@@ -10,6 +10,14 @@ function ValidateEmail(mail) {
 
 $(document).ready(function () {
   $('.spinner-container').hide();
+  $('.logo').click(() => {
+    $(location).attr('href', `${domain}`);
+  });
+
+  $('.btn-login').click(() => {
+    $(location).attr('href', `${domain}login`);
+  });
+
   $('#signup__form').submit(event => {
     event.preventDefault();
 
@@ -50,9 +58,5 @@ $(document).ready(function () {
         },
       });
     }
-
-    // console.log(email, passwd, passwdCheck);
-
-    // console.log('Try to signup');
   });
 });
