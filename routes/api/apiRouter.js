@@ -57,7 +57,7 @@ router.post('/signup', (req, res) => {
     email: req.get('email'),
     passwd: req.get('passwd'),
   };
-  console.log(user_info);
+  // console.log(user_info);
   createUserWithEmailAndPassword(auth, user_info.email, user_info.passwd)
     .then(userCredential => {
       // Signed in
@@ -80,8 +80,8 @@ router.get('/init', async (req, res) => {
   var item_list = [];
 
   // parse the UId from the req header Cookie
-  var user_ID = req.headers.cookie;
-  user_ID = user_ID.slice(4, user_ID.length - 1);
+  var user_ID = req.cookies['UId'];
+  // user_ID = user_ID.slice(4, user_ID.length - 1);
 
   //get the instance for specific collection in DB
   const list_collection = collection(db, 'list');
@@ -99,14 +99,9 @@ router.get('/init', async (req, res) => {
       invoice_num: item_data.invoice_num,
       item_name: item_data.item_name,
       last_update: item_data.last_update,
-      level: item_data.level
+      level: item_data.level,
     };
     item_list.push(item);
-    console.log(item);
-    // console.log(req.headers.cookie);
-    // doc.data() is never undefined for query doc snapshots
-    // doc.id = document's name
-    // console.log(doc.id, " => ", item_data.item_id);
   });
 
   //return the JSON as response
@@ -129,6 +124,7 @@ const GETRequst = (req) => {
     } catch (error) {
       console.error(error)
     }
+
 };
 
 //api for adding item to track list
@@ -198,22 +194,22 @@ router.get('/trackingInfo', (req, res) => {
   try {
     // var returnObject = [];
     GETRequst(req).then(response => {
-    // console.log(response.data.trackingDetails)
-    var tmp = {
-      invoice_num: response.data.invoiceNo,
-      level: response.data.level,
-      trackingDetails: response.data.trackingDetails
-    };
-    // returnObject.push(tmp);
-    res.contentType('application/json');
-    res.send(JSON.stringify(tmp));
-    // res.send(JSON.stringify(returnObject));
-  });
+      // console.log(response.data.trackingDetails)
+      var tmp = {
+        invoice_num: response.data.invoiceNo,
+        level: response.data.level,
+        trackingDetails: response.data.trackingDetails,
+      };
+      // returnObject.push(tmp);
+      res.contentType('application/json');
+      res.send(JSON.stringify(tmp));
+      // res.send(JSON.stringify(returnObject));
+    });
   } catch (error) {
     console.error(error);
-    res.status(400).json({ 
+    res.status(400).json({
       success: false,
-      ErrorMsg: error
+      ErrorMsg: error,
     });
   }
 });

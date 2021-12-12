@@ -19,6 +19,6 @@ app.use('/api', apiRouter); // api routing
 app.use('/', index); // rest routing
 
 app.listen(8001, function () {
-  console.log('Example app listening on port 8001!');
+  console.log('Listening on port 8001!');
   console.log('http://localhost:8001');
 });
