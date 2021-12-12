@@ -6,27 +6,14 @@ import index from './routes/index/index.js';
 import ejs from 'ejs';
 import cookieParser from 'cookie-parser';
 
-// import {example} from './routes/firebase/login.js';
-
-//firebase admin init part
-// var admin = require("firebase-admin");
-
-// var serviceAccount = require("/Users/jin/WEBproject/WebFinal/private/delivery-inquiry-firebase-adminsdk-uviu9-9b9554879f.json");
-
-// admin.initializeApp({
-//   credential: admin.credential.cert(serviceAccount)
-// });
-
 const app = express();
 
 app.set('view engine', 'ejs');
 app.engine('html', ejs.renderFile);
 
-app.use(express.static('public'));
-app.use(morgan('dev'));
-app.use(cookieParser());
-
-// const viewPath = path.resolve() + '/views/';
+app.use(express.static('public')); // public path for js, css files
+app.use(morgan('dev')); // logger
+app.use(cookieParser()); // cookie parser
 
 app.use('/api', apiRouter); // api routing
 app.use('/', index); // rest routing
