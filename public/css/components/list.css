@@ -20,6 +20,7 @@
   margin-bottom: 2.5rem;
   width: 50rem;
   border-radius: 0.5rem;
+  cursor: pointer;
 }
 
 .list__body {
@@ -79,6 +80,7 @@
 .list__updated {
   display: flex;
   align-items: center;
+  font-size: 1rem;
 }
 
 .listbody__item {
