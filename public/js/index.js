@@ -165,6 +165,30 @@ $(document).ready(function () {
 
   $('.btn-add-package').click(() => {
     // TODO : add modal event
-    console.log('button click test');
+    const packageName = $('#packageName').val();
+    const courierCode = $('#courierSelect').val();
+    const invoiceNum = $('#invoiceNumber').val();
+
+    $.ajax({
+      url: domain + 'api/addItem',
+      type: 'POST',
+      headers: {
+        item_name: packageName,
+        courier: courierCode,
+        invoice_num: invoiceNum,
+      },
+      dataType: 'json',
+      contentType: 'application/json; charset=utf-8',
+      success: res => {
+        alert('add complete');
+      },
+      error: e => {
+        console.log('add failure');
+      },
+    });
+  });
+
+  $('.header__logout').click(() => {
+    $(location).attr('href', `${domain}logout`);
   });
 });

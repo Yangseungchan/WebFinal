@@ -56,4 +56,5 @@ body {
 
 .header__logout {
   padding-right: 4rem;
+  cursor: pointer;
 }

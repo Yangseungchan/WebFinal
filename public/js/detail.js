@@ -225,22 +225,24 @@ const updateDetail = data => {
   // updated date update
   $('.detail__updated').text(parseDateToString(new Date(time_stamp)));
 
-  trackingDetails.forEach(element => {
-    const { timeString, where, kind } = element;
-    const tableRow = $('<tr></tr>');
-    const firstRow = $('<th></th>', {
-      scope: 'row',
-      text: timeString,
+  if (trackingDetails) {
+    trackingDetails.forEach(element => {
+      const { timeString, where, kind } = element;
+      const tableRow = $('<tr></tr>');
+      const firstRow = $('<th></th>', {
+        scope: 'row',
+        text: timeString,
+      });
+      const secondRow = $('<td></td>', {
+        text: where,
+      });
+      const thirdRow = $('<td></td>', {
+        text: kind,
+      });
+      tableRow.append(firstRow).append(secondRow).append(thirdRow);
+      $('tbody').append(tableRow);
     });
-    const secondRow = $('<td></td>', {
-      text: where,
-    });
-    const thirdRow = $('<td></td>', {
-      text: kind,
-    });
-    tableRow.append(firstRow).append(secondRow).append(thirdRow);
-    $('tbody').append(tableRow);
-  });
+  }
 };
 
 $(document).ready(function () {
