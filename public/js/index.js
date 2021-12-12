@@ -3,7 +3,7 @@ const domain = 'http://localhost:8001/';
 // parse date obj to date time string
 const parseDateToString = date => {
   const year = date.getFullYear();
-  const month = date.getMonth();
+  const month = date.getMonth() + 1;
   const day = date.getDate();
 
   const hours = date.getHours();
