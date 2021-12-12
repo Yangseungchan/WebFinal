@@ -130,6 +130,8 @@ const sample = {
   },
 };
 
+const domain = 'http://localhost:8001/';
+
 const courierList = {
   4: 'CJ대한통운',
   5: '한진택배',
@@ -197,7 +199,6 @@ const parseDateToString = date => {
 
 const updateDetail = data => {
   const {
-    item_id,
     courier,
     invoice_num,
     item_name,
@@ -223,7 +224,7 @@ const updateDetail = data => {
   $('.detail__courier').text(courierList[Number(courier)]);
 
   // updated date update
-  $('.detail__updated').text(parseDateToString(new Date(time_stamp)));
+  $('.detail__updated').text(parseDateToString(new Date(time_stamp * 1000)));
 
   if (trackingDetails) {
     trackingDetails.forEach(element => {
@@ -246,7 +247,41 @@ const updateDetail = data => {
 };
 
 $(document).ready(function () {
-  // get request from api using ajax
+  $('.spinner-container').hide();
+
+  // function that gets query string from given url
+  // reference : [https://stackoverflow.com/questions/4656843/get-querystring-from-url-using-jquery]
+  function getUrlVars() {
+    var vars = [],
+      hash;
+    var hashes = window.location.href
+      .slice(window.location.href.indexOf('?') + 1)
+      .split('&');
+    for (var i = 0; i < hashes.length; i++) {
+      hash = hashes[i].split('=');
+      vars.push(hash[0]);
+      vars[hash[0]] = hash[1];
+    }
+    return vars;
+  }
+
+  const courier = getUrlVars()['courier'];
+  const invoice_num = getUrlVars()['id'];
+
+  // TODO : trackingInfo API 연동
+  $.ajax({
+    url: domain + 'api/trackingInfo',
+    type: 'GET',
+    data: {
+      courier,
+      invoice_num,
+    },
+    dataType: 'json',
+    contentType: 'application/json; charset=utf-8',
+    success: res => {},
+    error: e => {},
+  });
+
   updateDetail(sample);
 
   $('.btn-update-detail').click(() => {
@@ -255,5 +290,9 @@ $(document).ready(function () {
 
   $('.btn-delete-detail').click(() => {
     console.log('click delete');
+  });
+
+  $('.header__logout').click(() => {
+    $(location).attr('href', `${domain}logout`);
   });
 });

@@ -9,6 +9,7 @@ function ValidateEmail(mail) {
 }
 
 $(document).ready(function () {
+  $('.spinner-container').hide();
   $('#signup__form').submit(event => {
     event.preventDefault();
 
@@ -30,6 +31,7 @@ $(document).ready(function () {
     }
     // it is possible to signup
     else {
+      $('.spinner-container').show();
       $.ajax({
         url: domain + 'api/signup',
         type: 'POST',
@@ -44,6 +46,7 @@ $(document).ready(function () {
           alert(
             'Your signup has been failed : Your email can be already signed up'
           );
+          $('.spinner-container').hide();
         },
       });
     }
