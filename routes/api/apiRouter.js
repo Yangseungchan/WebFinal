@@ -29,20 +29,39 @@ router.get('/login', (req, res) => {
       // Signed in
       console.log('login success');
       const user = userCredential.user;
-      //TODO: 로그인
-      //   res.render(viewPath + 'signup.html');
-      // ...
-      // userCredential.user.reloadUserInfo.localId,
       res.cookie('UId', userCredential.user.reloadUserInfo.localId);
+      res.json({
+        success: true,
+        UId: userCredential.user.reloadUserInfo.localId,
+      });
+    })
+    .catch(error => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage);
+      res.status(400).json({ success: false });
+    });
+});
+
+router.post('/signup', (req, res) => {
+  const user_info = {
+    email: req.get('email'),
+    passwd: req.get('passwd'),
+  };
+  console.log(user_info);
+  createUserWithEmailAndPassword(auth, user_info.email, user_info.passwd)
+    .then(userCredential => {
+      // Signed in
+      const user = userCredential.user;
+      // res.render(viewPath + 'login.html');
       res.json({ success: true });
     })
     .catch(error => {
       const errorCode = error.code;
       const errorMessage = error.message;
       console.log(errorMessage);
-      //TODO: 다시 로그인 창으로 가야함.
-      //   res.render(viewPath + 'login.html');
-      res.status(406).json({ success: false });
+      // res.render(viewPath + 'login.html');
+      res.status(400).json({ success: false });
     });
 });
 
