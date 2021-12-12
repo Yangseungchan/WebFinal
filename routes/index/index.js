@@ -20,12 +20,18 @@ const database = getDatabase();
 const auth = getAuth();
 
 router.get('/', function (req, res) {
+  if (!req.cookies['UId']) {
+    res.redirect('/login');
+  }
   res.render(viewPath + 'index.html');
   //로그인 안되어있으면 로그인 함수로 튕겨
   //redirect 이용
 });
 
 router.get('/login', (req, res) => {
+  if (req.cookies['UId']) {
+    res.redirect('/');
+  }
   res.render(viewPath + 'login.html');
 });
 
@@ -41,6 +47,12 @@ router.get('/detail/:id', function (req, res) {
   // const { id } = req.params;
   // console.log(id);
   res.render(viewPath + 'detail.html');
+});
+
+router.get('/logout', function (req, res) {
+  console.log('logout has been reached');
+  res.clearCookie('UId', { path: '/' });
+  res.redirect('/login');
 });
 
 export default router;

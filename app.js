@@ -4,6 +4,7 @@ import morgan from 'morgan';
 import apiRouter from './routes/api/apiRouter.js';
 import index from './routes/index/index.js';
 import ejs from 'ejs';
+import cookieParser from 'cookie-parser';
 
 // import {example} from './routes/firebase/login.js';
 
@@ -23,6 +24,7 @@ app.engine('html', ejs.renderFile);
 
 app.use(express.static('public'));
 app.use(morgan('dev'));
+app.use(cookieParser());
 
 // const viewPath = path.resolve() + '/views/';
 

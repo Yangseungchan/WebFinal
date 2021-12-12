@@ -10,7 +10,7 @@ function ValidateEmail(mail) {
 
 $(document).ready(function () {
   $('.btn-signup').click(() => {
-    $(location).attr('href', `${domain}/signup`);
+    $(location).attr('href', `${domain}signup`);
   });
 
   $('#login__form').submit(event => {
@@ -40,6 +40,7 @@ $(document).ready(function () {
           // Cookies.set('UId', UId, { expires: 7, path: '/' }); // 쿠키저장
           console.log('login success');
           alert('Login has been successful');
+          $(location).attr('href', `${domain}`);
         },
         error: e => {
           // password error
